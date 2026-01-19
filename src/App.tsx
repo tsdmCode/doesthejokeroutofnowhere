@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { CategorySelect } from './assets/components/CategorySelect';
+import { CategorySelect } from './assets/components/CategorySelect/CategorySelect';
 import './App.scss';
-import { Button } from './assets/components/Button';
+import { Button } from './assets/components/Button/Button';
 
 function App() {
   const [data, setData] = useState([]);
@@ -11,15 +11,19 @@ function App() {
   useEffect(() => {
     const url = 'http://localhost:3005/random_joke';
 
-    async function doFetchOnMount() {
+    async function fetchJokeOnLoad() {
       const res = await fetch(url);
       const json = await res.json();
       setData(json);
       console.log(json);
     }
 
-    doFetchOnMount();
+    fetchJokeOnLoad();
   }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
+  }, [isDark]);
 
   async function fetchRandomJoke() {
     const url = 'http://localhost:3005/random_joke';
@@ -39,7 +43,15 @@ function App() {
 
   return (
     <>
-      <CategorySelect onChange={setCategory} category={category} />
+      <Button
+        onClick={() => {
+          setDark(!isDark);
+          console.log(isDark);
+        }}
+        text={isDark ? 'Light Mode' : 'Dark Mode'}
+        isDark={isDark}
+      />
+      <CategorySelect onChange={setCategory} category={category} isDark={isDark} />
       {data ? (
         <>
           <h3>{data.setup}</h3>
@@ -48,8 +60,8 @@ function App() {
       ) : (
         <p>Loading…</p>
       )}
-      <Button onClick={fetchRandomJoke} text={'Boo! Giv mig en ny!'} />
-      <button onClick={fetchJokeByType}>Giv mig en {category} joke!</button>
+      <Button onClick={fetchRandomJoke} text={'Boo! Giv mig en ny!'} isDark={isDark} />
+      <Button onClick={fetchJokeByType} text={`Giv mig en ${category} joke!`} isDark={isDark} />
     </>
   );
 }

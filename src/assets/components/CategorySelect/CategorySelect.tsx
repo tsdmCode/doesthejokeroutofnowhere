@@ -1,9 +1,12 @@
+import style from './categoryselect.module.scss';
+
 interface CategorySelectProps {
   onChange: (value: string) => void;
   category: string;
+  isDark: boolean;
 }
 
-export function CategorySelect({ onChange, category }: CategorySelectProps) {
+export function CategorySelect({ onChange, category, isDark }: CategorySelectProps) {
   const catArray = ['general', 'programming', 'knock-knock'];
 
   const renderedTypes = catArray.map((category) => {
@@ -11,7 +14,11 @@ export function CategorySelect({ onChange, category }: CategorySelectProps) {
   });
 
   return (
-    <select value={category} onChange={(e) => onChange(e.currentTarget.value)}>
+    <select
+      className={isDark ? style.lightCategory : ''}
+      value={category}
+      onChange={(e) => onChange(e.currentTarget.value)}
+    >
       {renderedTypes}
     </select>
   );
